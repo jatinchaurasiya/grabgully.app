@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Grab Gully</string>
+    <string name="app_slogan">Har Deal Ka Baap.</string>
+    <string name="buy_button">Yahan Se Khareedo</string>
+    <string name="add_to_watchlist">Track Karo</string>
+    <string name="price_alert_cta">Price Alert Lagao</string>
+    <string name="cheapest_badge">SABSE SASTA</string>
+    <string name="watching_label">Nazar Mein</string>
+    <string name="alert_set_label">Alert Set</string>
+    <string name="price_dropped_label">Price Gira!</string>
+    <string name="empty_watchlist">Abhi kuch nahi track ho raha. Shuru karo!</string>
+    <string name="referral_cta">Dost Ko Bulao, 200 XP Lo!</string>
+    <string name="hero_deals_title">Aaj Ke Dhamakedar Deals</string>
+    <string name="see_all">Sab Dekho</string>
+    <string name="search_hint">Kya dhundh rahe ho?</string>
+    <string name="in_stock">In Stock</string>
+    <string name="out_of_stock">Out of Stock</string>
+    <string name="verified_price">Verified Price</string>
+    <string name="affiliate_disclosure">We earn a commission on purchases made via our links</string>
+    <string name="xp_progress_cta">Bazaar King banno!</string>
+    <string name="channel_price_alerts_name">Price Drop Alerts</string>
+    <string name="channel_price_alerts_desc">Instant notifications when your tracked products drop in price</string>
+</resources>

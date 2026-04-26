@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Obsidian Black — app window background, prevents cold-start white flash -->
+    <color name="obsidian_black">#08080F</color>
+    <!-- Gold Primary — notification light colour -->
+    <color name="gold_primary">#C9A84C</color>
+    <!-- Notification background accent -->
+    <color name="surface_deep">#111119</color>
+</resources>

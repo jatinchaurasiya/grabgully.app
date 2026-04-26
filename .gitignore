@@ -1,0 +1,45 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Grab Gully — .gitignore
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Secrets — NEVER commit these ─────────────────────────────────────────────
+local.properties
+google-services.json
+*.keystore
+*.jks
+release.properties
+.env
+
+# ── Build outputs ─────────────────────────────────────────────────────────────
+build/
+.gradle/
+*.apk
+*.aab
+*.aar
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+Thumbs.db
+
+# ── Gradle wrapper JAR (commit the script, not the binary) ───────────────────
+gradle/wrapper/gradle-wrapper.jar
+
+# ── ProGuard mapping (generated on release build) ────────────────────────────
+app/build/outputs/mapping/
+
+# ── Android generated ─────────────────────────────────────────────────────────
+gen/
+out/
+captures/
+
+# ── Kotlin Coroutines debug ───────────────────────────────────────────────────
+*.hprof
+
+# ── Node (if any web tooling is added) ───────────────────────────────────────
+node_modules/
+gradle-8.7/
+gradle-8.7-bin.zip

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Base application theme.
+      Compose handles all visual theming; this is only for:
+      - Window background (obsidian black so no white flash on cold start)
+      - Navigation / status bar colours
+    -->
+    <style name="Theme.GrabGully" parent="android:Theme.Material.NoActionBar">
+        <!-- Obsidian Black window background — prevents white flash -->
+        <item name="android:windowBackground">@color/obsidian_black</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <!--
+      Splash screen theme — used only during cold start before setContent().
+      References the androidx SplashScreen API.
+
+      The icon is the branded GG monogram on a gold surface circle.
+      See: res/drawable/ic_splash.xml
+    -->
+    <style name="Theme.GrabGully.SplashScreen" parent="Theme.SplashScreen">
+        <!-- Background of the splash window -->
+        <item name="windowSplashScreenBackground">@color/obsidian_black</item>
+        <!-- App icon shown centred — will be adaptive icon on API 31+ -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <!-- Duration of icon animation (0 = static icon) -->
+        <item name="windowSplashScreenAnimationDuration">300</item>
+        <!-- Theme to transition to after splash is dismissed -->
+        <item name="postSplashScreenTheme">@style/Theme.GrabGully</item>
+    </style>
+</resources>

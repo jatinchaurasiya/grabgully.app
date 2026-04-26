@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Splash screen drawable.
+  Used by Theme.GrabGully.SplashScreen in themes.xml.
+
+  Shows the GG monogram in Antique Gold on Obsidian Black.
+  Replace with your actual vector logo when ready.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#1A160A" />
+    <stroke
+        android:width="2dp"
+        android:color="#C9A84C" />
+</shape>

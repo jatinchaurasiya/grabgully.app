@@ -1,0 +1,18 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# local.properties.example — Safe template to commit to Git
+# Copy this file to local.properties and fill in real values.
+# DO NOT commit local.properties (it is in .gitignore)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Android SDK path (set this to your actual SDK location)
+sdk.dir=/home/YOUR_USERNAME/Android/Sdk
+
+# ─── Grab Gully Backend (Railway FastAPI) ─────────────────────────────────────
+GULLY_BASE_URL=https://YOUR_RAILWAY_DOMAIN.up.railway.app/
+
+# ─── Supabase ─────────────────────────────────────────────────────────────────
+SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+SUPABASE_ANON_KEY=eyYOUR_SUPABASE_ANON_KEY_HERE
+
+# ─── CueLink SDK ──────────────────────────────────────────────────────────────
+CUELINK_CHANNEL_ID=YOUR_CUELINK_CHANNEL_ID_HERE

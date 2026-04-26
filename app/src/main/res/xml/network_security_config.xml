@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    network_security_config.xml
+    ───────────────────────────
+    Forces HTTPS for all traffic.
+    Certificate pinning is disabled in debug builds to allow Charles Proxy.
+    In release builds, uncomment the pin-set block and paste your Railway cert hash.
+
+    Get cert hash:
+        openssl s_client -connect your-scraper.railway.app:443 |
+        openssl x509 -pubkey -noout |
+        openssl rsa -pubin -outform der 2>/dev/null |
+        openssl dgst -sha256 -binary | openssl enc -base64
+-->
+<network-security-config>
+    <!-- Block all plain HTTP everywhere -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Pin your Railway scraper domain in production -->
+    <!-- TODO: replace domain + pin hash before Play Store submission -->
+    <!--
+    <domain-config>
+        <domain includeSubdomains="true">your-scraper.railway.app</domain>
+        <pin-set expiration="2026-12-31">
+            <pin digest="SHA-256">YOUR_CERT_PIN_BASE64_HERE==</pin>
+        </pin-set>
+    </domain-config>
+    -->
+
+    <!-- Allow cleartext only for local debug (localhost emulator) -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <domain includeSubdomains="true">localhost</domain>
+    </domain-config>
+</network-security-config>
