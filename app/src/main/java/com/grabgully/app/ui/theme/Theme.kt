@@ -3,7 +3,7 @@ package com.grabgully.app.ui.theme
 import android.app.Activity
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
@@ -12,37 +12,35 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 // ═══════════════════════════════════════════════════════════════════════════════
-//  GRAB GULLY THEME — v2.0
-//  Dark mode ONLY. No light theme at MVP stage.
-//  The obsidian black + antique gold palette is intentional — we never show
-//  a white background. Any white you see is TextPrimary on a dark surface.
+//  GRAB GULLY THEME — v4.0 (Teal & Green)
+//  Light mode ONLY.
 // ═══════════════════════════════════════════════════════════════════════════════
 
-private val GrabGullyColorScheme: ColorScheme = darkColorScheme(
+private val GrabGullyColorScheme: ColorScheme = lightColorScheme(
     // ── Backgrounds ──────────────────────────────────────────────────────────
-    background          = ObsidianBlack,
-    surface             = SurfaceDeep,
-    surfaceVariant      = SurfaceRaised,
-    surfaceTint         = GoldSurface,
-    inverseSurface      = GoldPale,
+    background          = BackgroundLight,
+    surface             = SurfaceLight,
+    surfaceVariant      = BackgroundLight,
+    surfaceTint         = TealLight,
+    inverseSurface      = FloatingNavBg,
 
-    // ── Primary (Gold) ───────────────────────────────────────────────────────
-    primary             = GoldPrimary,
-    onPrimary           = ObsidianBlack,
-    primaryContainer    = GoldSurface,
-    onPrimaryContainer  = GoldBright,
+    // ── Primary (Teal) ───────────────────────────────────────────────────────
+    primary             = TealPrimary,
+    onPrimary           = Color.White,
+    primaryContainer    = TealLight,
+    onPrimaryContainer  = TealDark,
 
-    // ── Secondary (Muted gold) ───────────────────────────────────────────────
-    secondary           = GoldMuted,
-    onSecondary         = ObsidianBlack,
-    secondaryContainer  = SurfaceHighlight,
-    onSecondaryContainer = TextSecondary,
+    // ── Secondary (Mint Green) ───────────────────────────────────────────────
+    secondary           = MintGreen,
+    onSecondary         = TextPrimary,
+    secondaryContainer  = MintLight,
+    onSecondaryContainer = MintDark,
 
     // ── Tertiary (Savings green) ─────────────────────────────────────────────
-    tertiary            = SavingsGreen,
-    onTertiary          = ObsidianBlack,
-    tertiaryContainer   = SavingsBg,
-    onTertiaryContainer = SavingsGreen,
+    tertiary            = MintDark,
+    onTertiary          = Color.White,
+    tertiaryContainer   = MintLight,
+    onTertiaryContainer = MintDark,
 
     // ── Error ────────────────────────────────────────────────────────────────
     error               = AlertRed,
@@ -55,27 +53,14 @@ private val GrabGullyColorScheme: ColorScheme = darkColorScheme(
     onSurface           = TextPrimary,
     onSurfaceVariant    = TextSecondary,
     outline             = DividerColor,
-    outlineVariant      = SurfaceHighlight,
+    outlineVariant      = DividerColor,
 
     // ── Scrim / overlay ──────────────────────────────────────────────────────
-    scrim               = Color(0xCC000000),
+    scrim               = Color(0x33000000),
 )
 
 /**
  * Grab Gully theme composable.
- *
- * Usage: Wrap your entire Compose tree in this:
- * ```kotlin
- * GrabGullyTheme {
- *     GullyNavGraph(...)
- * }
- * ```
- *
- * The theme:
- * 1. Applies the obsidian + gold [GrabGullyColorScheme]
- * 2. Applies Poppins + Inter [GrabGullyTypography]
- * 3. Sets status bar to dark (white icons) on ObsidianBlack
- * 4. Makes nav bar match the bottom navigation background (SurfaceDeep)
  */
 @Composable
 fun GrabGullyTheme(content: @Composable () -> Unit) {
@@ -86,10 +71,12 @@ fun GrabGullyTheme(content: @Composable () -> Unit) {
             // Transparent status + nav bars — Compose draws edge-to-edge
             WindowCompat.setDecorFitsSystemWindows(window, false)
             @Suppress("DEPRECATION")
-            window.statusBarColor = ObsidianBlack.toArgb()
+            window.statusBarColor = Color.Transparent.toArgb()
+            window.navigationBarColor = Color.Transparent.toArgb()
+            
             WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightStatusBars     = false  // White icons
-                isAppearanceLightNavigationBars = false  // White icons
+                isAppearanceLightStatusBars     = true  // Dark icons for light theme
+                isAppearanceLightNavigationBars = true  // Dark icons
             }
         }
     }

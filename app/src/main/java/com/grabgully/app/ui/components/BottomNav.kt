@@ -1,13 +1,24 @@
 package com.grabgully.app.ui.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -15,50 +26,44 @@ import com.grabgully.app.ui.theme.*
 
 enum class GullyTab(
     val route:     String,
-    val label:     String,
     val icon:      ImageVector,
     val iconSelected: ImageVector,
 ) {
     HOME(
         route        = "home",
-        label        = "Home",
-        icon         = Icons.Default.LocalFireDepartment,
-        iconSelected = Icons.Default.LocalFireDepartment,
+        icon         = Icons.Outlined.Home,
+        iconSelected = Icons.Filled.Home,
     ),
     SEARCH(
         route        = "search",
-        label        = "Search",
-        icon         = Icons.Default.Search,
-        iconSelected = Icons.Default.Search,
+        icon         = Icons.Outlined.Search,
+        iconSelected = Icons.Filled.Search,
     ),
     TRACK(
         route        = "track",
-        label        = "Track",
-        icon         = Icons.Default.Visibility,
-        iconSelected = Icons.Default.Visibility,
+        icon         = Icons.Outlined.Visibility,
+        iconSelected = Icons.Filled.Visibility,
     ),
     LEADERBOARD(
         route        = "leaderboard",
-        label        = "Leaders",
-        icon         = Icons.Default.EmojiEvents,
-        iconSelected = Icons.Default.EmojiEvents,
+        icon         = Icons.Outlined.EmojiEvents,
+        iconSelected = Icons.Filled.EmojiEvents,
     ),
     PROFILE(
         route        = "profile",
-        label        = "Profile",
-        icon         = Icons.Default.Person,
-        iconSelected = Icons.Default.Person,
+        icon         = Icons.Outlined.Person,
+        iconSelected = Icons.Filled.Person,
     ),
 }
 
 /**
- * Premium bottom navigation bar.
+ * Premium Floating Bottom Navigation Bar (Teal & Green Light Theme).
  *
- * Design tokens:
- * - Background: SurfaceDeep (#111119)
- * - Top border: DividerColor 1dp
- * - Active tab: GoldPrimary icon + label
- * - Inactive tab: TextMuted icon + no label
+ * Design matches inspiration image:
+ * - Floating black pill shape
+ * - Just icons (no text labels)
+ * - Active state: Mint Green circular background with black icon
+ * - Inactive state: Muted white/gray icon, no background
  */
 @Composable
 fun GullyBottomNav(
@@ -66,51 +71,70 @@ fun GullyBottomNav(
     onTabSelect:  (GullyTab) -> Unit,
     modifier:     Modifier = Modifier,
 ) {
-    NavigationBar(
-        containerColor = SurfaceDeep,
-        tonalElevation = 0.dp,
-        modifier = modifier.drawBehind {
-            // Top border — 1dp DividerColor
-            val borderWidth = 1.dp.toPx()
-            drawLine(
-                color       = DividerColor,
-                start       = Offset(0f, 0f),
-                end         = Offset(size.width, 0f),
-                strokeWidth = borderWidth,
-            )
-        },
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .navigationBarsPadding()
+            .padding(bottom = 16.dp),
+        contentAlignment = Alignment.BottomCenter,
     ) {
-        GullyTab.entries.forEach { tab ->
-            val selected = currentRoute == tab.route
-            NavigationBarItem(
-                selected = selected,
-                onClick  = { onTabSelect(tab) },
-                icon     = {
-                    Icon(
-                        imageVector        = if (selected) tab.iconSelected else tab.icon,
-                        contentDescription = tab.label,
-                    )
-                },
-                label = {
-                    Text(
-                        text  = tab.label,
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                },
-                alwaysShowLabel = false,
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor     = GoldPrimary,
-                    selectedTextColor     = GoldPrimary,
-                    unselectedIconColor   = TextMuted,
-                    unselectedTextColor   = TextMuted,
-                    indicatorColor        = GoldSurface,
-                ),
+        Surface(
+            color    = FloatingNavBg,
+            shape    = RoundedCornerShape(50),
+            modifier = Modifier.shadow(
+                elevation = 24.dp,
+                shape     = RoundedCornerShape(50),
+                spotColor = TealDark.copy(alpha = 0.2f),
             )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment     = Alignment.CenterVertically,
+            ) {
+                GullyTab.entries.forEach { tab ->
+                    val selected = currentRoute == tab.route
+                    
+                    val bgColor = animateColorAsState(
+                        targetValue   = if (selected) MintGreen else Color.Transparent,
+                        animationSpec = tween(300),
+                        label         = "nav_bg_${tab.route}",
+                    )
+                    
+                    val iconColor = animateColorAsState(
+                        targetValue   = if (selected) FloatingNavBg else TextMuted,
+                        animationSpec = tween(300),
+                        label         = "nav_icon_${tab.route}",
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(bgColor.value)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication        = null,
+                            ) { onTabSelect(tab) },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector        = if (selected) tab.iconSelected else tab.icon,
+                            contentDescription = tab.route,
+                            tint               = iconColor.value,
+                            modifier           = Modifier.size(24.dp),
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF111119)
+@Preview(showBackground = true, backgroundColor = 0xFFF4F6F8)
 @Composable
 private fun BottomNavPreview() {
     GrabGullyTheme {

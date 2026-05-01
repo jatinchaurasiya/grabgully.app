@@ -2,7 +2,9 @@ package com.grabgully.app.ui.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -12,34 +14,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.grabgully.app.data.model.Deal
 import com.grabgully.app.ui.theme.*
 
 /**
- * DealCard — the core reusable deal card.
+ * DealCard — the core reusable deal card (v4.0 Teal/Light Theme).
  *
- * Layout:
- *  ┌──────────────────────────┐
- *  │  [Product Image]         │
- *  │  [PLATFORM]  [♥]         │ ← overlaid on image
- *  ├──────────────────────────┤
- *  │  Brand name (muted)      │
- *  │  Product title (2-line)  │
- *  │  ₹4,999  ₹2,499  50%OFF │
- *  └──────────────────────────┘
- *
- * @param deal           The deal to display
- * @param isWishlisted   Whether the user has this in their watchlist
- * @param onCardClick    Tap handler — navigates to CompareScreen
- * @param onWishlistClick Heart icon tap — add/remove from watchlist
+ * Soft shadows, 24dp rounded corners, light background, teal shimmer.
  */
 @Composable
 fun DealCard(
@@ -50,26 +44,53 @@ fun DealCard(
     onWishlistClick:  () -> Unit   = {},
 ) {
     var wishlisted by remember(isWishlisted) { mutableStateOf(isWishlisted) }
+    var isPressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(
+        targetValue   = if (isPressed) 0.95f else 1f,
+        animationSpec = tween(durationMillis = 200),
+        label         = "card_press_scale",
+    )
 
-    // Shimmer animation for loading state
-    val shimmerTransition = rememberInfiniteTransition(label = "shimmer")
+    // Shimmer animation for price text (Teal & Mint)
+    val shimmerTransition = rememberInfiniteTransition(label = "price_shimmer")
     val shimmerOffset by shimmerTransition.animateFloat(
-        initialValue  = -1000f,
+        initialValue  = 0f,
         targetValue   = 1000f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = LinearEasing),
+            animation  = tween(2000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart,
         ),
         label = "shimmer_offset",
+    )
+    val shimmerBrush = Brush.linearGradient(
+        colors = listOf(TealPrimary, MintGreen, TealPrimary),
+        start  = Offset(shimmerOffset - 500f, 0f),
+        end    = Offset(shimmerOffset, 0f),
     )
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onCardClick),
-        shape  = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceDeep),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            .scale(scale)
+            .shadow(
+                elevation = 12.dp,
+                shape     = RoundedCornerShape(24.dp),
+                spotColor = SoftShadow,
+                ambientColor = SoftShadow,
+            )
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        isPressed = true
+                        tryAwaitRelease()
+                        isPressed = false
+                    },
+                    onTap = { onCardClick() },
+                )
+            },
+        shape    = RoundedCornerShape(24.dp),
+        colors   = CardDefaults.cardColors(containerColor = SurfaceLight),
+        border   = BorderStroke(1.dp, DividerColor),
     ) {
         Column {
             // ── Product Image + Overlay Badges ─────────────────────────────
@@ -77,7 +98,7 @@ fun DealCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
             ) {
                 // Product image
                 AsyncImage(
@@ -87,36 +108,27 @@ fun DealCard(
                     modifier          = Modifier.fillMaxSize(),
                 )
 
-                // Subtle gradient overlay at the bottom for badge readability
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .align(Alignment.BottomCenter)
-                        .background(
-                            Brush.verticalGradient(
-                                colors = listOf(Color.Transparent, SurfaceDeep.copy(alpha = 0.8f))
-                            )
-                        )
-                )
-
                 // Platform badge — top left
                 PlatformBadge(
                     platform = deal.platform,
                     modifier = Modifier
                         .align(Alignment.TopStart)
-                        .padding(8.dp),
+                        .padding(12.dp),
                 )
 
-                // Wishlist heart — top right
-                IconButton(
-                    onClick  = {
-                        wishlisted = !wishlisted
-                        onWishlistClick()
-                    },
+                // Wishlist heart — glassmorphism circular button
+                Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .size(40.dp),
+                        .padding(12.dp)
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.8f))
+                        .clickable {
+                            wishlisted = !wishlisted
+                            onWishlistClick()
+                        },
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = if (wishlisted)
@@ -124,71 +136,78 @@ fun DealCard(
                         else
                             Icons.Outlined.FavoriteBorder,
                         contentDescription = if (wishlisted) "Remove from watchlist" else "Add to watchlist",
-                        tint = if (wishlisted) GoldPrimary else TextPrimary,
+                        tint     = if (wishlisted) AlertRed else TextSecondary,
+                        modifier = Modifier.size(20.dp),
                     )
                 }
             }
 
             // ── Text content ───────────────────────────────────────────────
             Column(
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
             ) {
-                // Brand
+                // Brand — uppercase, tiny, muted
                 if (deal.brand.isNotBlank()) {
                     Text(
-                        text     = deal.brand,
-                        style    = MaterialTheme.typography.bodySmall,
-                        color    = TextSecondary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        text          = deal.brand.uppercase(),
+                        fontSize      = 10.sp,
+                        fontWeight    = FontWeight.Medium,
+                        fontFamily    = InterFamily,
+                        color         = TextSecondary,
+                        letterSpacing = 0.5.sp,
+                        maxLines      = 1,
+                        overflow      = TextOverflow.Ellipsis,
                     )
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                 }
 
-                // Title
+                // Title — 14sp semibold, 2 lines, min height for grid alignment
                 Text(
                     text     = deal.title,
-                    style    = MaterialTheme.typography.titleSmall,
+                    style    = MaterialTheme.typography.titleSmall.copy(
+                        fontSize   = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        lineHeight = 18.sp,
+                    ),
                     color    = TextPrimary,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.heightIn(min = 40.dp),
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Price row
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                ) {
-                    // Deal price — gold + bold
-                    Text(
-                        text  = deal.formattedDealPrice,
-                        style = PriceTextStyle,
-                    )
-
-                    // Original price strikethrough (only if there's a discount)
-                    if (deal.hasDiscount) {
+                // Original price + discount badge row
+                if (deal.hasDiscount) {
+                    Row(
+                        verticalAlignment     = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier              = Modifier.padding(bottom = 4.dp),
+                    ) {
                         Text(
                             text  = deal.formattedOriginalPrice,
                             style = OriginalPriceStyle,
                         )
+                        SavingsBadge(percent = deal.discountPct)
                     }
                 }
 
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // Savings badge
-                if (deal.discountPct > 0) {
-                    SavingsBadge(percent = deal.discountPct)
-                }
+                // Deal price — shimmer teal gradient
+                Text(
+                    text  = deal.formattedDealPrice,
+                    style = PriceTextStyle.copy(
+                        fontSize   = 18.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        brush      = shimmerBrush,
+                    ),
+                )
             }
         }
     }
 }
 
 
-// ── Shimmer placeholder (shown while image loads) ─────────────────────────────
+// ── Shimmer placeholder (shown while page loads) ──────────────────────────────
 
 @Composable
 fun DealCardSkeleton(modifier: Modifier = Modifier) {
@@ -203,39 +222,42 @@ fun DealCardSkeleton(modifier: Modifier = Modifier) {
         label = "skeleton_x",
     )
     val shimmerBrush = Brush.linearGradient(
-        colors     = listOf(SurfaceDeep, SurfaceHighlight, SurfaceDeep),
+        colors     = listOf(InactiveChipBg, Color.White, InactiveChipBg),
         start      = Offset(shimmerX - 300, 0f),
         end        = Offset(shimmerX, 0f),
     )
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape    = RoundedCornerShape(16.dp),
-        colors   = CardDefaults.cardColors(containerColor = SurfaceDeep),
+        shape    = RoundedCornerShape(24.dp),
+        colors   = CardDefaults.cardColors(containerColor = SurfaceLight),
+        border   = BorderStroke(1.dp, DividerColor),
     ) {
         Column {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                     .background(shimmerBrush)
             )
-            Column(modifier = Modifier.padding(10.dp)) {
-                Box(Modifier.fillMaxWidth(0.5f).height(12.dp).background(shimmerBrush, RoundedCornerShape(4.dp)))
+            Column(modifier = Modifier.padding(16.dp)) {
+                Box(Modifier.fillMaxWidth(0.4f).height(10.dp).background(shimmerBrush, RoundedCornerShape(4.dp)))
                 Spacer(Modifier.height(6.dp))
                 Box(Modifier.fillMaxWidth().height(14.dp).background(shimmerBrush, RoundedCornerShape(4.dp)))
                 Spacer(Modifier.height(4.dp))
-                Box(Modifier.fillMaxWidth(0.8f).height(14.dp).background(shimmerBrush, RoundedCornerShape(4.dp)))
+                Box(Modifier.fillMaxWidth(0.7f).height(14.dp).background(shimmerBrush, RoundedCornerShape(4.dp)))
                 Spacer(Modifier.height(10.dp))
-                Box(Modifier.fillMaxWidth(0.4f).height(20.dp).background(shimmerBrush, RoundedCornerShape(4.dp)))
+                Box(Modifier.fillMaxWidth(0.3f).height(10.dp).background(shimmerBrush, RoundedCornerShape(4.dp)))
+                Spacer(Modifier.height(6.dp))
+                Box(Modifier.fillMaxWidth(0.5f).height(20.dp).background(shimmerBrush, RoundedCornerShape(4.dp)))
             }
         }
     }
 }
 
 
-@Preview(showBackground = true, backgroundColor = 0xFF08080F)
+@Preview(showBackground = true, backgroundColor = 0xFFF4F6F8)
 @Composable
 private fun DealCardPreview() {
     com.grabgully.app.ui.theme.GrabGullyTheme {
@@ -252,7 +274,7 @@ private fun DealCardPreview() {
                 affiliateUrl  = "https://amazon.in/dp/B08X7VXDS8",
                 category      = "electronics",
             ),
-            modifier = Modifier.width(180.dp),
+            modifier = Modifier.width(180.dp).padding(16.dp),
         )
     }
 }

@@ -81,15 +81,15 @@ fun EmptyState(
             androidx.compose.material3.Button(
                 onClick = onCtaClick,
                 colors  = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = GoldPrimary,
-                    contentColor   = ObsidianBlack,
+                    containerColor = TealPrimary,
+                    contentColor   = androidx.compose.ui.graphics.Color.White,
                 ),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
             ) {
                 Text(
                     text  = cta,
                     style = MaterialTheme.typography.labelLarge,
-                    color = ObsidianBlack,
+                    color = androidx.compose.ui.graphics.Color.White,
                 )
             }
         }

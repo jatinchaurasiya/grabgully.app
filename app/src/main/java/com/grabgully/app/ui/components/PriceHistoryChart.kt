@@ -63,7 +63,7 @@ fun PriceHistoryChart(
         ) {
             StatLabel("Low", "₹${"%.0f".format(minP)}", SavingsGreen)
             StatLabel("High", "₹${"%.0f".format(maxP)}", AlertRed)
-            StatLabel("Now", "₹${"%.0f".format(prices.last())}", GoldPrimary)
+            StatLabel("Now", "₹${"%.0f".format(prices.last())}", TealPrimary)
         }
 
         // Vico chart (1.x stable API)
@@ -85,7 +85,7 @@ private fun StatLabel(label: String, value: String, color: Color) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF111119)
+@Preview(showBackground = true, backgroundColor = 0xFFF4F6F8)
 @Composable
 private fun PriceHistoryChartPreview() {
     GrabGullyTheme {

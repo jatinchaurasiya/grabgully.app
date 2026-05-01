@@ -10,10 +10,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 
 // ═══════════════════════════════════════════════════════════════════════════════
-//  GRAB GULLY TYPOGRAPHY — v2.0
+//  GRAB GULLY TYPOGRAPHY — v3.0
 //  Font strategy (Compose Downloadable Fonts API):
-//    • Poppins  → Display, Headline, Title, Price  (bold, geometric, aspirational)
-//    • Inter    → Body, Caption, Labels            (humanist, highly readable)
+//    • Plus Jakarta Sans → Display, Headline, Title, Price  (bold, geometric, premium)
+//    • Inter             → Body, Caption, Labels            (humanist, highly readable)
 //
 //  Uses androidx.compose.ui.text.googlefonts to download at runtime.
 //  No .ttf files needed in res/font/ — fonts are fetched + cached by GMS.
@@ -28,23 +28,32 @@ private val provider = GoogleFont.Provider(
     certificates      = com.grabgully.app.R.array.com_google_android_gms_fonts_certs,
 )
 
-val PoppinsFamily: FontFamily = FontFamily(
+// v3.0: Plus Jakarta Sans replaces Poppins for headlines — matches mockup
+val PlusJakartaSansFamily: FontFamily = FontFamily(
     Font(
-        googleFont      = GoogleFont("Poppins"),
+        googleFont      = GoogleFont("Plus Jakarta Sans"),
         fontProvider    = provider,
         weight          = FontWeight.Normal,
     ),
     Font(
-        googleFont      = GoogleFont("Poppins"),
+        googleFont      = GoogleFont("Plus Jakarta Sans"),
         fontProvider    = provider,
         weight          = FontWeight.SemiBold,
     ),
     Font(
-        googleFont      = GoogleFont("Poppins"),
+        googleFont      = GoogleFont("Plus Jakarta Sans"),
         fontProvider    = provider,
         weight          = FontWeight.Bold,
     ),
+    Font(
+        googleFont      = GoogleFont("Plus Jakarta Sans"),
+        fontProvider    = provider,
+        weight          = FontWeight.ExtraBold,
+    ),
 )
+
+// Keep Poppins as an alias for backward compat (any external code referencing it)
+val PoppinsFamily: FontFamily = PlusJakartaSansFamily
 
 val InterFamily: FontFamily = FontFamily(
     Font(
@@ -67,48 +76,69 @@ val InterFamily: FontFamily = FontFamily(
 // ── Custom price style (not part of M3 type scale) ───────────────────────────
 /**
  * Used for deal prices in DealCard and CompareScreen.
- * 20sp Bold Poppins in GoldPrimary — always applied directly.
+ * 20sp Bold Plus Jakarta Sans in GoldPrimary — always applied directly.
  */
 val PriceTextStyle = TextStyle(
-    fontFamily = PoppinsFamily,
-    fontWeight = FontWeight.Bold,
+    fontFamily = PlusJakartaSansFamily,
+    fontWeight = FontWeight.ExtraBold,
     fontSize   = 20.sp,
-    color      = GoldPrimary,
+    color      = TealPrimary,
 )
 
 /**
  * Strikethrough original price.
  */
 val OriginalPriceStyle = TextStyle(
-    fontFamily     = PoppinsFamily,
+    fontFamily     = InterFamily,
     fontWeight     = FontWeight.Normal,
-    fontSize       = 14.sp,
+    fontSize       = 12.sp,
     color          = TextMuted,
     textDecoration = TextDecoration.LineThrough,
 )
 
 /**
- * % OFF badge text — compact Poppins Bold.
+ * % OFF badge text — compact Plus Jakarta Sans Bold.
  */
 val BadgeTextStyle = TextStyle(
-    fontFamily = PoppinsFamily,
+    fontFamily = PlusJakartaSansFamily,
     fontWeight = FontWeight.Bold,
-    fontSize   = 11.sp,
+    fontSize   = 10.sp,
+)
+
+/**
+ * Large display price used in hero banner and profile savings.
+ */
+val HeroPriceStyle = TextStyle(
+    fontFamily = PlusJakartaSansFamily,
+    fontWeight = FontWeight.ExtraBold,
+    fontSize   = 28.sp,
+    color      = TealPrimary,
+)
+
+/**
+ * Section subtitle — small uppercase tracking.
+ */
+val SectionSubtitleStyle = TextStyle(
+    fontFamily    = InterFamily,
+    fontWeight    = FontWeight.Bold,
+    fontSize      = 10.sp,
+    color         = TextSecondary,
+    letterSpacing = 2.sp,
 )
 
 // ── Material 3 Typography ─────────────────────────────────────────────────────
 val GrabGullyTypography = Typography(
     // ── Display ──────────────────────────────────────────────────────────────
     displayLarge = TextStyle(
-        fontFamily = PoppinsFamily,
-        fontWeight = FontWeight.Bold,
+        fontFamily = PlusJakartaSansFamily,
+        fontWeight = FontWeight.ExtraBold,
         fontSize   = 28.sp,
         lineHeight = 36.sp,
         color      = TextPrimary,
     ),
     displayMedium = TextStyle(
-        fontFamily = PoppinsFamily,
-        fontWeight = FontWeight.Bold,
+        fontFamily = PlusJakartaSansFamily,
+        fontWeight = FontWeight.ExtraBold,
         fontSize   = 24.sp,
         lineHeight = 32.sp,
         color      = TextPrimary,
@@ -116,15 +146,15 @@ val GrabGullyTypography = Typography(
 
     // ── Headline ─────────────────────────────────────────────────────────────
     headlineLarge = TextStyle(
-        fontFamily = PoppinsFamily,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = PlusJakartaSansFamily,
+        fontWeight = FontWeight.Bold,
         fontSize   = 22.sp,
         lineHeight = 30.sp,
         color      = TextPrimary,
     ),
     headlineMedium = TextStyle(
-        fontFamily = PoppinsFamily,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = PlusJakartaSansFamily,
+        fontWeight = FontWeight.Bold,
         fontSize   = 20.sp,
         lineHeight = 28.sp,
         color      = TextPrimary,
@@ -132,25 +162,25 @@ val GrabGullyTypography = Typography(
 
     // ── Title ─────────────────────────────────────────────────────────────────
     titleLarge = TextStyle(
-        fontFamily = PoppinsFamily,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = PlusJakartaSansFamily,
+        fontWeight = FontWeight.Bold,
         fontSize   = 17.sp,
         lineHeight = 24.sp,
         color      = TextPrimary,
     ),
     titleMedium = TextStyle(
-        fontFamily = PoppinsFamily,
+        fontFamily = PlusJakartaSansFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize   = 15.sp,
         lineHeight = 22.sp,
         color      = TextPrimary,
     ),
     titleSmall = TextStyle(
-        fontFamily = PoppinsFamily,
+        fontFamily = PlusJakartaSansFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize   = 13.sp,
+        fontSize   = 14.sp,
         lineHeight = 20.sp,
-        color      = TextSecondary,
+        color      = TextPrimary,
     ),
 
     // ── Body ──────────────────────────────────────────────────────────────────
@@ -179,7 +209,7 @@ val GrabGullyTypography = Typography(
     // ── Label ─────────────────────────────────────────────────────────────────
     labelLarge = TextStyle(
         fontFamily = InterFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize   = 14.sp,
         lineHeight = 20.sp,
         color      = TextPrimary,

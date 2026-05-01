@@ -49,7 +49,7 @@ fun OnboardingScreen(
             emoji       = "🛒",
             title       = "Har Deal Ka Baap.",
             subtitle    = "India's most premium deal-discovery app.\nEk tap mein sabse sasta.",
-            accentColor = GoldPrimary,
+            accentColor = TealPrimary,
         ),
         OnboardingPage(
             emoji       = "🔍",
@@ -80,7 +80,7 @@ fun OnboardingScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(ObsidianBlack)
+            .background(BackgroundLight)
     ) {
         // Background radial glow
         Box(
@@ -88,7 +88,7 @@ fun OnboardingScreen(
                 .fillMaxSize()
                 .background(
                     Brush.radialGradient(
-                        colors  = listOf(GoldSurface.copy(alpha = 0.6f), Color.Transparent),
+                        colors  = listOf(TealLight.copy(alpha = 0.6f), Color.Transparent),
                         radius  = 800f,
                     )
                 )
@@ -103,7 +103,7 @@ fun OnboardingScreen(
             Text(
                 text     = "GRAB GULLY",
                 style    = MaterialTheme.typography.displayLarge.copy(fontSize = 28.sp),
-                color    = GoldPrimary,
+                color    = TealPrimary,
                 fontWeight = FontWeight.Bold,
             )
 
@@ -243,7 +243,7 @@ private data class OnboardingPage(
     val accentColor: Color,
 )
 
-@Preview(showBackground = true, backgroundColor = 0xFF08080F)
+@Preview(showBackground = true, backgroundColor = 0xFFF4F6F8)
 @Composable
 private fun OnboardingPreview() {
     GrabGullyTheme { OnboardingScreen() }
